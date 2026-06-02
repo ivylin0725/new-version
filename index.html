@@ -46,6 +46,7 @@
 
         .input-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         label {
@@ -55,19 +56,42 @@
             color: #555;
         }
 
-        input[type="number"] {
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"] {
             width: 100%;
-            padding: 12px;
+            padding: 12px 40px 12px 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 18px;
             box-sizing: border-box;
             transition: border-color 0.3s;
         }
 
-        input[type="number"]:focus {
+        input[type="text"]:focus {
             border-color: var(--primary-color);
             outline: none;
+        }
+
+        /* 清除按鈕 */
+        .clear-btn {
+            position: absolute;
+            right: 12px;
+            background: #ccc;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
 
         .result-card {
@@ -96,7 +120,7 @@
         }
 
         .result-value {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
         }
 
@@ -122,7 +146,10 @@
     
     <div class="input-group">
         <label for="basePower">請輸入您的基礎戰力：</label>
-        <input type="number" id="basePower" placeholder="例如：100000" oninput="calculatePower()">
+        <div class="input-wrapper">
+            <input type="text" id="basePower" inputmode="numeric" pattern="[0-9]*" placeholder="例如：100000" oninput="calculatePower()">
+            <button class="clear-btn" id="clearBtn" onclick="clearInput()">✕</button>
+        </div>
     </div>
 
     <div class="result-card demon">
@@ -140,28 +167,43 @@
 
 <script>
     function calculatePower() {
-        // 取得輸入的基礎戰力值
-        const basePower = parseFloat(document.getElementById('basePower').value);
+        const inputField = document.getElementById('basePower');
+        const clearBtn = document.getElementById('clearBtn');
         
+        // 過濾掉非數字的字元（防止部分安卓鍵盤還能打符號）
+        inputField.value = inputField.value.replace(/[^0-9]/g, '');
+        
+        const basePower = parseFloat(inputField.value);
         const demonResultValue = document.getElementById('demonResult');
         const immortalResultValue = document.getElementById('immortalResult');
 
-        // 如果輸入欄位為空或不是數字，顯示 0
+        // 控制清除按鈕顯示與否
+        if (inputField.value.length > 0) {
+            clearBtn.style.display = 'flex';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+
+        // 如果欄位為空，重置為 0
         if (isNaN(basePower) || basePower <= 0) {
             demonResultValue.innerText = '0';
             immortalResultValue.innerText = '0';
             return;
         }
 
-        // 計算修魔：基礎戰力 * 1.05 / 0.95
+        // 計算並四捨五入加上千分位
         const demonPower = (basePower * 1.05) / 0.95;
-        
-        // 計算修仙：基礎戰力 * 1.1 / 0.9
         const immortalPower = (basePower * 1.1) / 0.9;
 
-        // 顯示結果（四捨五入取至整數，並加上千分位逗號方便閱讀）
         demonResultValue.innerText = Math.round(demonPower).toLocaleString('zh-TW');
         immortalResultValue.innerText = Math.round(immortalPower).toLocaleString('zh-TW');
+    }
+
+    function clearInput() {
+        const inputField = document.getElementById('basePower');
+        inputField.value = '';
+        calculatePower();
+        inputField.focus(); // 清除後自動聚焦，方便直接輸入新數字
     }
 </script>
 
