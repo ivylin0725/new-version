@@ -62,7 +62,8 @@
             align-items: center;
         }
 
-        input[type="text"] {
+        /* 調整輸入框樣式 */
+        input[type="tel"] {
             width: 100%;
             padding: 12px 40px 12px 12px;
             border: 2px solid #ddd;
@@ -72,12 +73,11 @@
             transition: border-color 0.3s;
         }
 
-        input[type="text"]:focus {
+        input[type="tel"]:focus {
             border-color: var(--primary-color);
             outline: none;
         }
 
-        /* 清除按鈕 */
         .clear-btn {
             position: absolute;
             right: 12px;
@@ -147,7 +147,7 @@
     <div class="input-group">
         <label for="basePower">請輸入您的基礎戰力：</label>
         <div class="input-wrapper">
-            <input type="text" id="basePower" inputmode="numeric" pattern="[0-9]*" placeholder="例如：100000" oninput="calculatePower()">
+            <input type="tel" id="basePower" placeholder="例如：100000" oninput="calculatePower()">
             <button class="clear-btn" id="clearBtn" onclick="clearInput()">✕</button>
         </div>
     </div>
@@ -170,28 +170,25 @@
         const inputField = document.getElementById('basePower');
         const clearBtn = document.getElementById('clearBtn');
         
-        // 過濾掉非數字的字元（防止部分安卓鍵盤還能打符號）
+        // 過濾掉非數字的字元
         inputField.value = inputField.value.replace(/[^0-9]/g, '');
         
         const basePower = parseFloat(inputField.value);
         const demonResultValue = document.getElementById('demonResult');
         const immortalResultValue = document.getElementById('immortalResult');
 
-        // 控制清除按鈕顯示與否
         if (inputField.value.length > 0) {
             clearBtn.style.display = 'flex';
         } else {
             clearBtn.style.display = 'none';
         }
 
-        // 如果欄位為空，重置為 0
         if (isNaN(basePower) || basePower <= 0) {
             demonResultValue.innerText = '0';
             immortalResultValue.innerText = '0';
             return;
         }
 
-        // 計算並四捨五入加上千分位
         const demonPower = (basePower * 1.05) / 0.95;
         const immortalPower = (basePower * 1.1) / 0.9;
 
@@ -203,7 +200,7 @@
         const inputField = document.getElementById('basePower');
         inputField.value = '';
         calculatePower();
-        inputField.focus(); // 清除後自動聚焦，方便直接輸入新數字
+        inputField.focus();
     }
 </script>
 
