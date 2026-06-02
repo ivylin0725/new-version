@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修仙/修魔打帖計算機</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary-color: #4a90e2;
+            --immortal-color: #2ecc71;
+            --demon-color: #e74c3c;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .result-card {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #ccc;
+        }
+
+        .result-card.demon {
+            border-left-color: var(--demon-color);
+            background-color: #fdf2f2;
+        }
+
+        .result-card.immortal {
+            border-left-color: var(--immortal-color);
+            background-color: #f2fdf5;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .demon .result-value {
+            color: var(--demon-color);
+        }
+
+        .immortal .result-value {
+            color: var(--immortal-color);
+        }
+
+        .formula-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>⚔️ 打帖戰力計算機</h2>
+    
+    <div class="input-group">
+        <label for="basePower">請輸入您的基礎戰力：</label>
+        <input type="number" id="basePower" placeholder="例如：100000" oninput="calculatePower()">
+    </div>
+
+    <div class="result-card demon">
+        <div class="result-title">👹 可打修魔戰力上限</div>
+        <div class="result-value" id="demonResult">0</div>
+        <div class="formula-hint">計算公式：基礎戰力 × 1.05 / 0.95</div>
+    </div>
+
+    <div class="result-card immortal">
+        <div class="result-title">✨ 可打修仙戰力上限</div>
+        <div class="result-value" id="immortalResult">0</div>
+        <div class="formula-hint">計算公式：基礎戰力 × 1.1 / 0.9</div>
+    </div>
+</div>
+
+<script>
+    function calculatePower() {
+        // 取得輸入的基礎戰力值
+        const basePower = parseFloat(document.getElementById('basePower').value);
+        
+        const demonResultValue = document.getElementById('demonResult');
+        const immortalResultValue = document.getElementById('immortalResult');
+
+        // 如果輸入欄位為空或不是數字，顯示 0
+        if (isNaN(basePower) || basePower <= 0) {
+            demonResultValue.innerText = '0';
+            immortalResultValue.innerText = '0';
+            return;
+        }
+
+        // 計算修魔：基礎戰力 * 1.05 / 0.95
+        const demonPower = (basePower * 1.05) / 0.95;
+        
+        // 計算修仙：基礎戰力 * 1.1 / 0.9
+        const immortalPower = (basePower * 1.1) / 0.9;
+
+        // 顯示結果（四捨五入取至整數，並加上千分位逗號方便閱讀）
+        demonResultValue.innerText = Math.round(demonPower).toLocaleString('zh-TW');
+        immortalResultValue.innerText = Math.round(immortalPower).toLocaleString('zh-TW');
+    }
+</script>
+
+</body>
+</html>
